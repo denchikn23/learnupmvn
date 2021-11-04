@@ -13,19 +13,19 @@ public class GameTrafficLightsTest {
         Assertions.assertEquals(actual, expected, "Система некорректно работает, если нет игроков.");
     }
 
-    @Test
+    @Test //Подразумевается, что допустимая скорость по модулю должна быть не больше максимальной.
     public void shouldWorkWithNegativeSpeedIfIsNotGreenLight() {
-        int[] speed = {3, -1, 0};
+        int[] speed = {3, -1, -3};
         int[] actual = GameTrafficLights.speedsOfLosers(speed);
-        int[] expected = {3, -1};
+        int[] expected = {3, -3};
         Assertions.assertArrayEquals(actual, expected, "Система неправильно считает скорости выбывших игроков с отрицательными скоростями или выводит скорости не в том порядке.");
     }
 
     @Test
-    public void shouldWorkIfIsGreenLight() {
-        int[] speed = {3, -1, 0};
+    public void shouldWorkIfSpeedsIsEqualMax() {
+        int[] speed = {2, -2, 2, 2, -2, 2, -2, -2};
         int[] actual = GameTrafficLights.speedsOfWinners(speed);
-        int[] expected = {3, -1, 0};
-        Assertions.assertArrayEquals(actual, expected, "Система некорректно работает с зеленым светом или выводит скорости не в том порядке.");
+        int[] expected = {2, -2, 2, 2, -2, 2, -2, -2};
+        Assertions.assertArrayEquals(actual, expected, "Система некорректно работает с максимальной скоростью или выводит скорости не в том порядке.");
     }
 }
