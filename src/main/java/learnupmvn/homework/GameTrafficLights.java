@@ -1,4 +1,4 @@
-package ru.learnup.javaqa.learnupmvn.service;
+package learnupmvn.homework;
 import java.util.Arrays;
 
 public class GameTrafficLights {
@@ -48,12 +48,38 @@ public class GameTrafficLights {
         }
         return arrOfSpeeds;
     }
+    public static String[] nameOfWinners(String[] data){
+        int countOfWinners = data.length;
+        int count = 0;
+
+        for (int i = 0; i < data.length; i++) {
+            String[] parts = data[i].split(" ");
+            if ((!isGreenLight) & ((Integer.parseInt(parts[1]) < -maxSpeed) | (Integer.parseInt(parts[1]) > maxSpeed))){
+                countOfWinners--;
+            }
+        }
+
+        String[] namesOfWinners = new String[countOfWinners];
+        for (int i = 0; i < data.length; i++) {
+            String[] parts = data[i].split(" ");
+            if ((isGreenLight) | ((!isGreenLight)&((Integer.parseInt(parts[1]) >= -maxSpeed)&(Integer.parseInt(parts[1]) <= maxSpeed)))){
+                namesOfWinners[count] = parts[0];
+                count++;
+            }
+        }
+
+        return namesOfWinners;
+    }
 
     public static void main(String[] args) {
-        int[] speed = {3, -1, -3};
-
+        int[] speed = {3, 0, -2};
+        String[] data = {"Daniil 3",
+                         "Filipp 0",
+                         "Daria -2"};
         System.out.println("Количество выбывших игроков : " + numberOfLosers(speed) + '.');
         System.out.println("Массив скоростей выбывших игроков : " + Arrays.toString(speedsOfLosers(speed)) + '.');
         System.out.println("Массив скоростей выигравших игроков : " + Arrays.toString(speedsOfWinners(speed)) + '.');
+        System.out.println("Имена выигравших игроков: " + Arrays.toString(nameOfWinners(data)) + '.');
     }
 }
+
