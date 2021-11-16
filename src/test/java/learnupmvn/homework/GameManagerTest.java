@@ -4,62 +4,76 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
 public class GameManagerTest {
+
     @Test
-    public void shouldWorkIfFirstSpeedMoreThanMax(){
-        GameManager gameFirst = new GameManager(false, 3);
-        int[] speedInRound = {
-                7,
-                -1,
-                1,
-                -2,
-                2,
-                -3,
-                3,
-                -4,
-                4,
-                -5,
-                5
-        };
+    public void shouldWorkIfBothPlayersAreConstantAndWonInGame(){
+        Movable p1 = new ConstantPlayer(0);
+        Movable p2 = new ConstantPlayer(0);
+        Game game = new Game(false);
+        GameManager manager = new GameManager(game);
+
         int expected = 0;
-        int actual = gameFirst.numberOfRounds(speedInRound);
-        Assertions.assertEquals(expected, actual, "Система некорректно работает, если первая скорость больше по модулю максимальной.");
+        int actual = manager.loser(p1, p2, game, 5);
+        Assertions.assertEquals(expected, actual, "Система некорректно работает, если оба константных игрока не проиграли в обычной игре.");
     }
 
     @Test
-    public void shouldWorkIfAllSpeedNotMoreThanMax(){
-        GameManager gameFirst = new GameManager(false, 3);
-        int[] speedInRound = {
-                0,
-                -1,
-                1,
-                -2,
-                2,
-                -3,
-                3
-        };
-        int expected = 7;
-        int actual = gameFirst.numberOfRounds(speedInRound);
-        Assertions.assertEquals(expected, actual, "Система некорректно работает, если все скорости не больше по модулю максимальной.");
+    public void shouldWorkIfBothPlayersArtFastAndLostInSpeedyGame(){
+        Movable p1 = new FastPlayer(0, 2);
+        Movable p2 = new FastPlayer(3, 1);
+        Game game = new SpeedyGame(false, 6);
+        GameManager manager = new GameManager(game);
+
+        int expected = 2;
+        int actual = manager.loser(p1, p2, game, 5);
+        Assertions.assertEquals(expected, actual, "Система некорректно работает, если оба быстрых игрока проиграли в скоростной игре.");
+    }
+
+    @Test
+    public void shouldWorkIfFirstPlayerIsConstantAndLostInSpeedyGame(){
+        Movable p1 = new ConstantPlayer(5);
+        Movable p2 = new FastPlayer(0, 1);
+        Game game = new SpeedyGame(false, 3);
+        GameManager manager = new GameManager(game);
+
+        int expected = -1;
+        int actual = manager.loser(p1, p2, game, 5);
+        Assertions.assertEquals(expected, actual, "Система некорректно работает, если первый игрок константный и проиграл в скоростной игре.");
+    }
+
+    @Test
+    public void shouldWorkIfSecondPlayerIsSpeedyAndLostInGame(){
+        Movable p1 = new ConstantPlayer(0);
+        Movable p2 = new FastPlayer(0, 1);
+        Game game = new Game(false);
+        GameManager manager = new GameManager(game);
+
+        int expected = 1;
+        int actual = manager.loser(p1, p2, game, 5);
+        Assertions.assertEquals(expected, actual, "Система некорректно работает, если второй игрок быстрый и проиграл в игре.");
+    }
+
+    @Test
+    public void shouldWorkIfNotRounds(){
+        Movable p1 = new ConstantPlayer(5);
+        Movable p2 = new FastPlayer(0, 1);
+        Game game = new SpeedyGame(false, 3);
+        GameManager manager = new GameManager(game);
+
+        int expected = 0;
+        int actual = manager.loser(p1, p2, game, 0);
+        Assertions.assertEquals(expected, actual, "Система некорректно работает, если число раундов равно 0.");
     }
 
     @Test
     public void shouldWorkIfGreenLight(){
-        GameManager gameFirst = new GameManager(true, 0);
-        int[] speedInRound = {
-                0,
-                -1,
-                1,
-                -2,
-                2,
-                -3,
-                3,
-                -4,
-                4,
-                -5,
-                5
-        };
-        int expected = 11;
-        int actual = gameFirst.numberOfRounds(speedInRound);
-        Assertions.assertEquals(expected, actual, "Система некорректно работает с зеленым светом.");
+        Movable p1 = new ConstantPlayer(5);
+        Movable p2 = new FastPlayer(0, 1);
+        Game game = new SpeedyGame(true, 3);
+        GameManager manager = new GameManager(game);
+
+        int expected = 0;
+        int actual = manager.loser(p1, p2, game, 0);
+        Assertions.assertEquals(expected, actual, "Система некорректно работает, если горит зеленый свет.");
     }
 }
