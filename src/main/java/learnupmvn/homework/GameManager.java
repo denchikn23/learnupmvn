@@ -3,30 +3,26 @@ package learnupmvn.homework;
 import lombok.Data;
 
 public class GameManager {
-    private boolean isGreenLight;
-    private int maxSpeed;
+    private Game game;
 
-    public GameManager(boolean isGreenLight, int maxSpeed) {
-        this.isGreenLight = isGreenLight;
-        this.maxSpeed = maxSpeed;
+    public GameManager(Game game) {
+        this.game = game;
     }
 
     public int numberOfRounds(int[] speedInRound){
         int countOfRounds = 0;
-        if (!isGreenLight){
-            for (int i = 0; i < speedInRound.length; i++){
-                if ((speedInRound[i] >= -maxSpeed) & (speedInRound[i] <= maxSpeed)){
-                    countOfRounds++;
-                }
-                else return countOfRounds;
+        for (int i = 0; i < speedInRound.length; i++){
+            if (!game.isFailed(speedInRound[i])){
+                countOfRounds++;
             }
-            return countOfRounds;
+            else return countOfRounds;
         }
-        return speedInRound.length;
+        return countOfRounds;
     }
 
     public static void main(String[] args) {
-        GameManager gameFirst = new GameManager(false, 3);
+        Game game = new Game(false);
+        GameManager gameFirst = new GameManager(game);
         int[] speedInRound = {
                 0,
                 -1,
@@ -40,6 +36,6 @@ public class GameManager {
                 -5,
                 5
         };
-        System.out.println("Игрок продержится раундов: " + gameFirst.numberOfRounds(speedInRound));
+        System.out.println("Игрок продержится раундов: " + gameFirst.numberOfRounds(speedInRound) + ".");
     }
 }
